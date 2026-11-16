@@ -1,0 +1,9 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>bridge</title></head><body><script>
+addEventListener("message", async (e) => {
+  const d = e.data || {};
+  if (d.type !== "want" || !/^[0-9a-z_.-]+$/i.test(d.name)) return;
+  try { const r = await fetch(d.name); if (!r.ok) throw new Error(r.status); const b = await r.blob(); e.source.postMessage({type: "img", name: d.name, blob: b}, "*"); }
+  catch (err) { e.source.postMessage({type: "err", name: d.name, msg: String(err)}, "*"); }
+});
+if (window.parent !== window) window.parent.postMessage({type: "ready"}, "*");
+</script></body></html>
